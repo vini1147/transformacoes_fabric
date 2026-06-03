@@ -1,0 +1,12 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "Notebook",
+    "displayName": "nb_bronze",
+    "description": "Copia arquivos parquet para tabelas deltas na camada Bronze"
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "f4d9102a-1e48-9d1e-464b-93429c47364e"
+  }
+}

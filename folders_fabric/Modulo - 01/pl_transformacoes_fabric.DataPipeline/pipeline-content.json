@@ -1,0 +1,416 @@
+{
+  "properties": {
+    "activities": [
+      {
+        "type": "Copy",
+        "typeProperties": {
+          "source": {
+            "type": "SqlServerSource",
+            "partitionOption": "None",
+            "queryTimeout": "00:10:00",
+            "datasetSettings": {
+              "type": "SqlServerTable",
+              "typeProperties": {
+                "schema": "SalesLT",
+                "table": "Address",
+                "database": "AdventureWorksLT"
+              },
+              "schema": [],
+              "externalReferences": {
+                "connection": "071b6b10-0181-472a-a6a8-881a5d1976de"
+              },
+              "annotations": []
+            }
+          },
+          "sink": {
+            "type": "LakehouseTableSink",
+            "tableActionOption": "OverwriteSchema",
+            "applyVOrder": false,
+            "partitionOption": "None",
+            "datasetSettings": {
+              "type": "LakehouseTable",
+              "typeProperties": {
+                "table": "Address"
+              },
+              "schema": [],
+              "linkedService": {
+                "name": "lh_transformacoes_fabric",
+                "properties": {
+                  "type": "Lakehouse",
+                  "typeProperties": {
+                    "artifactId": "12092e7c-fcd2-b723-4c64-ce4d039e30a6",
+                    "workspaceId": "00000000-0000-0000-0000-000000000000",
+                    "rootFolder": "Tables"
+                  },
+                  "annotations": []
+                }
+              },
+              "annotations": []
+            }
+          },
+          "translator": {
+            "type": "TabularTranslator",
+            "mappings": [
+              {
+                "source": {
+                  "name": "AddressID",
+                  "type": "Int32",
+                  "physicalType": "int"
+                },
+                "sink": {
+                  "name": "AddressID",
+                  "physicalType": "integer"
+                }
+              },
+              {
+                "source": {
+                  "name": "AddressLine1",
+                  "type": "String",
+                  "physicalType": "nvarchar",
+                  "length": "60"
+                },
+                "sink": {
+                  "name": "AddressLine1",
+                  "physicalType": "string"
+                }
+              },
+              {
+                "source": {
+                  "name": "AddressLine2",
+                  "type": "String",
+                  "physicalType": "nvarchar",
+                  "length": "60"
+                },
+                "sink": {
+                  "name": "AddressLine2",
+                  "physicalType": "string"
+                }
+              },
+              {
+                "source": {
+                  "name": "City",
+                  "type": "String",
+                  "physicalType": "nvarchar",
+                  "length": "30"
+                },
+                "sink": {
+                  "name": "City",
+                  "physicalType": "string"
+                }
+              },
+              {
+                "source": {
+                  "name": "StateProvince",
+                  "type": "String",
+                  "physicalType": "nvarchar",
+                  "length": "50"
+                },
+                "sink": {
+                  "name": "StateProvince",
+                  "physicalType": "string"
+                }
+              },
+              {
+                "source": {
+                  "name": "CountryRegion",
+                  "type": "String",
+                  "physicalType": "nvarchar",
+                  "length": "50"
+                },
+                "sink": {
+                  "name": "CountryRegion",
+                  "physicalType": "string"
+                }
+              },
+              {
+                "source": {
+                  "name": "PostalCode",
+                  "type": "String",
+                  "physicalType": "nvarchar",
+                  "length": "15"
+                },
+                "sink": {
+                  "name": "PostalCode",
+                  "physicalType": "string"
+                }
+              },
+              {
+                "source": {
+                  "name": "rowguid",
+                  "type": "Guid",
+                  "physicalType": "uniqueidentifier"
+                },
+                "sink": {
+                  "name": "rowguid",
+                  "physicalType": "string"
+                }
+              },
+              {
+                "source": {
+                  "name": "ModifiedDate",
+                  "type": "DateTime",
+                  "physicalType": "datetime"
+                },
+                "sink": {
+                  "name": "ModifiedDate",
+                  "physicalType": "timestamp"
+                }
+              }
+            ],
+            "typeConversion": true,
+            "typeConversionSettings": {
+              "allowDataTruncation": true,
+              "treatBooleanAsNumber": false
+            }
+          },
+          "enableStaging": false
+        },
+        "policy": {
+          "timeout": "0.00:10:00",
+          "retry": 0,
+          "retryIntervalInSeconds": 30,
+          "secureInput": false,
+          "secureOutput": false
+        },
+        "name": "SQL Server para LH",
+        "dependsOn": []
+      },
+      {
+        "type": "Copy",
+        "typeProperties": {
+          "source": {
+            "type": "LakehouseTableSource",
+            "datasetSettings": {
+              "type": "LakehouseTable",
+              "typeProperties": {
+                "table": "Address"
+              },
+              "schema": [],
+              "linkedService": {
+                "name": "lh_transformacoes_fabric",
+                "properties": {
+                  "type": "Lakehouse",
+                  "typeProperties": {
+                    "artifactId": "039e30a6-ce4d-4c64-b723-fcd212092e7c",
+                    "workspaceId": "8fdbf08f-bdcd-465b-8c6b-ef7e9c798d84",
+                    "rootFolder": "Tables"
+                  },
+                  "annotations": []
+                }
+              },
+              "annotations": []
+            }
+          },
+          "sink": {
+            "type": "DataWarehouseSink",
+            "tableOption": "autoCreate",
+            "preCopyScript": "IF EXISTS(\n    SELECT 1\n    FROM sys.objects\n    WHERE object_id = OBJECT_ID(N'[dw_transformacoes_fabric].[SalesLT].[Address]')\n    AND type = 'U'\n)\nBEGIN\n    TRUNCATE TABLE [dw_transformacoes_fabric].[SalesLT].[Address];\nEND",
+            "allowCopyCommand": true,
+            "copyCommandSettings": {},
+            "writeBehavior": "Insert",
+            "disableMetricsCollection": false,
+            "datasetSettings": {
+              "type": "DataWarehouseTable",
+              "typeProperties": {
+                "schema": "SalesLT",
+                "table": "Address"
+              },
+              "schema": [],
+              "linkedService": {
+                "name": "dw_transformacoes_fabric",
+                "properties": {
+                  "type": "DataWarehouse",
+                  "typeProperties": {
+                    "artifactId": "6d682c44-6857-4111-80e1-2d1fb9e811a0",
+                    "endpoint": "w2c46x4zlu5e5afnp6k4h7kcpm-r7ynxd6nxvnunddl557jy6mnqq.datawarehouse.fabric.microsoft.com",
+                    "workspaceId": "8fdbf08f-bdcd-465b-8c6b-ef7e9c798d84"
+                  },
+                  "annotations": []
+                }
+              },
+              "annotations": []
+            }
+          },
+          "translator": {
+            "type": "TabularTranslator",
+            "mappings": [
+              {
+                "source": {
+                  "name": "AddressID",
+                  "type": "Int32",
+                  "physicalType": "integer"
+                },
+                "sink": {
+                  "name": "AddressID",
+                  "physicalType": "int"
+                }
+              },
+              {
+                "source": {
+                  "name": "AddressLine1",
+                  "type": "String",
+                  "physicalType": "string"
+                },
+                "sink": {
+                  "name": "AddressLine1",
+                  "physicalType": "varchar",
+                  "length": "60"
+                }
+              },
+              {
+                "source": {
+                  "name": "AddressLine2",
+                  "type": "String",
+                  "physicalType": "string"
+                },
+                "sink": {
+                  "name": "AddressLine2",
+                  "physicalType": "varchar",
+                  "length": "60"
+                }
+              },
+              {
+                "source": {
+                  "name": "City",
+                  "type": "String",
+                  "physicalType": "string"
+                },
+                "sink": {
+                  "name": "City",
+                  "physicalType": "varchar",
+                  "length": "50"
+                }
+              },
+              {
+                "source": {
+                  "name": "StateProvince",
+                  "type": "String",
+                  "physicalType": "string"
+                },
+                "sink": {
+                  "name": "StateProvince",
+                  "physicalType": "varchar",
+                  "length": "50"
+                }
+              },
+              {
+                "source": {
+                  "name": "CountryRegion",
+                  "type": "String",
+                  "physicalType": "string"
+                },
+                "sink": {
+                  "name": "CountryRegion",
+                  "physicalType": "varchar",
+                  "length": "30"
+                }
+              },
+              {
+                "source": {
+                  "name": "PostalCode",
+                  "type": "String",
+                  "physicalType": "string"
+                },
+                "sink": {
+                  "name": "PostalCode",
+                  "physicalType": "varchar",
+                  "length": "15"
+                }
+              },
+              {
+                "source": {
+                  "name": "rowguid",
+                  "type": "String",
+                  "physicalType": "string"
+                },
+                "sink": {
+                  "name": "rowguid",
+                  "physicalType": "uniqueidentifier"
+                }
+              },
+              {
+                "source": {
+                  "name": "ModifiedDate",
+                  "type": "DateTime",
+                  "physicalType": "timestamp"
+                },
+                "sink": {
+                  "name": "ModifiedDate",
+                  "physicalType": "datetime2",
+                  "precision": 6
+                }
+              }
+            ],
+            "typeConversion": true,
+            "typeConversionSettings": {
+              "allowDataTruncation": true,
+              "treatBooleanAsNumber": false
+            }
+          },
+          "enableStaging": true
+        },
+        "policy": {
+          "timeout": "0.00:10:00",
+          "retry": 0,
+          "retryIntervalInSeconds": 30,
+          "secureInput": false,
+          "secureOutput": false
+        },
+        "name": "LH para DW - Full",
+        "state": "Inactive",
+        "onInactiveMarkAs": "Succeeded",
+        "dependsOn": [
+          {
+            "activity": "SQL Server para LH",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ]
+      },
+      {
+        "type": "SqlServerStoredProcedure",
+        "typeProperties": {
+          "storedProcedureName": "[SalesLT].[sp.upsert_Address]",
+          "storedProcedureParameters": {
+            "ModifiedSince": {
+              "value": {
+                "value": "@formatDateTime(utcNow(), 'yyyy-MM-ddT00:00:00')",
+                "type": "Expression"
+              },
+              "type": "DateTime"
+            }
+          }
+        },
+        "linkedService": {
+          "name": "dw_transformacoes_fabric",
+          "properties": {
+            "type": "DataWarehouse",
+            "typeProperties": {
+              "artifactId": "b9e811a0-2d1f-80e1-4111-68576d682c44",
+              "endpoint": "w2c46x4zlu5e5afnp6k4h7kcpm-r7ynxd6nxvnunddl557jy6mnqq.datawarehouse.fabric.microsoft.com",
+              "workspaceId": "00000000-0000-0000-0000-000000000000"
+            },
+            "annotations": []
+          }
+        },
+        "policy": {
+          "timeout": "0.00:10:00",
+          "retry": 0,
+          "retryIntervalInSeconds": 30,
+          "secureInput": false,
+          "secureOutput": false
+        },
+        "name": "LH para DW - Incremental",
+        "dependsOn": [
+          {
+            "activity": "SQL Server para LH",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}
