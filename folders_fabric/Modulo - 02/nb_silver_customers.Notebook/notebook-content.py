@@ -17,6 +17,17 @@
 
 # CELL ********************
 
+mssparkutils.session.stop()
+
+# METADATA ********************
+
+# META {
+# META   "language": "python",
+# META   "language_group": "synapse_pyspark"
+# META }
+
+# CELL ********************
+
 # Configurações da sessão spark
 spark.conf.set("spark.sql.CaseSensitive", True)
 
